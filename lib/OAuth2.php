@@ -849,16 +849,18 @@ class OAuth2
                          'access_token_lifetime' => $this->getVariable(self::CONFIG_ACCESS_LIFETIME),
                          'issue_refresh_token' => true, 'refresh_token_lifetime' => $this->getVariable(self::CONFIG_REFRESH_LIFETIME));
 
-        $scope = $stored['scope'];
-        if ($input["scope"]) {
+        if (!empty($input["scope"])) {
             // Check scope, if provided
             if (!isset($stored["scope"]) || !$this->checkScope($input["scope"], $stored["scope"])) {
                 throw new OAuth2ServerException(Response::HTTP_BAD_REQUEST, self::ERROR_INVALID_SCOPE, 'An unsupported scope was requested.');
             }
             $scope = $input["scope"];
+        } else {
+            throw new OAuth2ServerException(Response::HTTP_BAD_REQUEST, self::ERROR_INSUFFICIENT_SCOPE, 'Scope is missed in request.');
         }
 
         $token = $this->createAccessToken($client, $stored['data'], $scope, $stored['access_token_lifetime'], $stored['issue_refresh_token'], $stored['refresh_token_lifetime']);
+
         return new Response(json_encode($token), 200, $this->getJsonHeaders());
     }
 
