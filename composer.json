@@ -1,5 +1,5 @@
 {
-    "name": "stfalcon/oauth2-php",
+    "name": "stfalcon-studio/oauth2-php",
     "type": "library",
     "description": "OAuth2 library",
     "license": "MIT",
